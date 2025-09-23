@@ -1,53 +1,126 @@
-import ArticleSummarizer from "@/components/ArticleSummarizer";
 import AppLayout from "@/components/layouts/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, Download, Printer, Share2, FileSpreadsheet } from "lucide-react";
-
-// Mock data for generated summaries
-const mockSummaries = [
-  {
-    id: 1,
-    title: "AI Breakthrough in Natural Language Processing",
-    originalUrl: "https://example.com/ai-breakthrough",
-    summary: "Researchers at leading technology institutions have developed a revolutionary artificial intelligence model that demonstrates unprecedented understanding of complex human language patterns. This breakthrough represents a significant leap forward in natural language processing capabilities, with potential applications spanning from automated content creation to advanced conversational interfaces. The model's ability to comprehend context, nuance, and implicit meaning marks a crucial step toward more sophisticated AI systems that can interact with humans in increasingly natural ways.",
-    keywords: ["AI", "Natural Language Processing", "Machine Learning", "Technology"],
-    dateGenerated: "2024-01-15",
-    wordCount: 1247,
-    readingTime: "5 min"
-  },
-  {
-    id: 2,
-    title: "Global Climate Change Mitigation Strategies",
-    originalUrl: "https://example.com/climate-strategies",
-    summary: "A comprehensive analysis of current global climate change mitigation strategies reveals both promising developments and significant challenges ahead. International cooperation has led to innovative renewable energy solutions, carbon capture technologies, and sustainable development practices. However, the report emphasizes the urgent need for accelerated implementation of existing solutions and continued innovation in green technology sectors to meet ambitious climate targets set by the Paris Agreement.",
-    keywords: ["Climate Change", "Renewable Energy", "Sustainability", "Environment"],
-    dateGenerated: "2024-01-14",
-    wordCount: 2156,
-    readingTime: "8 min"
-  },
-];
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Label } from "@/components/ui/label";
+import { Sparkles, Link as LinkIcon } from "lucide-react";
 
 const Dashboard = () => {
-  const exportOptions = [
-    { icon: FileText, label: "PDF", action: "pdf" },
-    { icon: FileSpreadsheet, label: "Excel", action: "excel" },
-    { icon: FileText, label: "Word", action: "word" },
-    { icon: Printer, label: "Print", action: "print" },
-    { icon: Share2, label: "Share", action: "share" },
-  ];
+  const [articleUrl, setArticleUrl] = useState("");
+  const [articleText, setArticleText] = useState("");
+  const [isPremium, setIsPremium] = useState(false);
+  const [showKeywords, setShowKeywords] = useState(false);
 
-  const handleExport = (summaryId: number, action: string) => {
-    console.log(`Exporting summary ${summaryId} as ${action}`);
-    // Export functionality would be implemented here
+  const handleSummarize = () => {
+    // Implementation for summarizing article
+    console.log("Summarizing article...");
   };
 
   return (
     <AppLayout>
       <div className="p-6">
         <div className="max-w-2xl mx-auto space-y-6">
-          <ArticleSummarizer />
-          {/* Summarized Articles Card */}
+          <Card className="w-full shadow-card">
+            <CardHeader className="text-center">
+              <CardTitle className="flex items-center justify-center gap-2 text-2xl">
+                <Sparkles className="w-6 h-6 text-primary" />
+                Article Summarizer
+              </CardTitle>
+              <p className="text-muted-foreground">
+                Transform any article into a concise, intelligent summary
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <Tabs defaultValue="url" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="url" className="flex items-center gap-2">
+                    <LinkIcon className="w-4 h-4" />
+                    URL
+                  </TabsTrigger>
+                  <TabsTrigger value="text">Text</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="url" className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="article-url">Article URL</Label>
+                    <Input
+                      id="article-url"
+                      type="url"
+                      placeholder="https://example.com/article"
+                      value={articleUrl}
+                      onChange={(e) => setArticleUrl(e.target.value)}
+                      className="rounded-full"
+                    />
+                  </div>
+                </TabsContent>
+
+                <TabsContent value="text" className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="article-text">Article Text</Label>
+                    <Textarea
+                      id="article-text"
+                      placeholder="Paste your article text here..."
+                      value={articleText}
+                      onChange={(e) => setArticleText(e.target.value)}
+                      className="min-h-32 resize-none"
+                    />
+                  </div>
+                </TabsContent>
+              </Tabs>
+
+              {/* Options */}
+              <div className="space-y-4 p-4 bg-muted/30 rounded-xl">
+                <h4 className="font-medium text-sm">Summarization Options</h4>
+
+                <div className="flex items-center justify-between">
+                  <div className="space-y-1">
+                    <Label htmlFor="premium-mode" className="text-sm font-medium">
+                      Premium Summarizer
+                    </Label>
+                    <p className="text-xs text-muted-foreground">
+                      Advanced AI for more detailed summaries
+                    </p>
+                  </div>
+                  <Switch
+                    id="premium-mode"
+                    checked={isPremium}
+                    onCheckedChange={setIsPremium}
+                  />
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="keywords"
+                    checked={showKeywords}
+                    onCheckedChange={(checked) => setShowKeywords(checked as boolean)}
+                  />
+                  <Label htmlFor="keywords" className="text-sm">
+                    Display Keywords
+                  </Label>
+                </div>
+              </div>
+
+              {/* Summarize Button */}
+              <Button
+                onClick={handleSummarize}
+                size="xl"
+                shape="pill"
+                variant="hero"
+                className="w-full"
+              >
+                <Sparkles className="w-5 h-5 mr-2" />
+                Summarize Article
+              </Button>
+            </CardContent>
+          </Card>
+          
+          
+          {/* Summarized Articles will show below */}
         </div>
       </div>
     </AppLayout>
