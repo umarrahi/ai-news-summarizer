@@ -1,0 +1,169 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Main colors */
+    --background: 0 0% 100%;
+    --foreground: 218 11% 12%;
+
+    /* Card colors */
+    --card: 0 0% 100%;
+    --card-foreground: 218 11% 12%;
+
+    /* Popover colors */
+    --popover: 0 0% 100%;
+    --popover-foreground: 218 11% 12%;
+
+    /* Primary - Orange theme */
+    --primary: 25 88% 63%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 25 88% 55%;
+    --primary-light: 25 88% 75%;
+
+    /* Secondary colors */
+    --secondary: 220 13% 96%;
+    --secondary-foreground: 218 11% 15%;
+
+    /* Muted colors */
+    --muted: 220 13% 96%;
+    --muted-foreground: 220 9% 46%;
+
+    /* Accent colors */
+    --accent: 220 13% 96%;
+    --accent-foreground: 218 11% 15%;
+
+    /* Destructive colors */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Border and input */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 25 88% 63%;
+
+    /* Custom gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(28 93% 71%), hsl(28 93% 80%));
+    --gradient-hero: linear-gradient(135deg, hsl(28 93% 71%) 0%, hsl(35 91% 75%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(220 13% 98%) 100%);
+
+    /* Shadows */
+    --shadow-soft: 0 2px 20px -4px hsl(220 13% 91% / 0.6);
+    --shadow-card: 0 4px 24px -4px hsl(220 13% 91% / 0.8);
+    --shadow-primary: 0 8px 32px -8px hsl(28 93% 71% / 0.3);
+
+    /* Radius */
+    --radius: 0.75rem;
+
+    /* Sidebar colors */
+    --sidebar-background: 220 13% 98%;
+    --sidebar-foreground: 218 11% 15%;
+    --sidebar-primary: 25 88% 63%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 13% 94%;
+    --sidebar-accent-foreground: 218 11% 15%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 25 88% 63%;
+  }
+
+  .dark {
+    /* Main colors */
+    --background: 218 25% 6%;
+    --foreground: 220 13% 91%;
+
+    /* Card colors */
+    --card: 218 25% 8%;
+    --card-foreground: 220 13% 91%;
+
+    /* Popover colors */
+    --popover: 218 25% 8%;
+    --popover-foreground: 220 13% 91%;
+
+    /* Primary - Orange theme (darker) */
+    --primary: 25 88% 63%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 25 88% 55%;
+    --primary-light: 25 88% 75%;
+
+    /* Secondary colors */
+    --secondary: 218 25% 12%;
+    --secondary-foreground: 220 13% 91%;
+
+    /* Muted colors */
+    --muted: 218 25% 12%;
+    --muted-foreground: 220 9% 60%;
+
+    /* Accent colors */
+    --accent: 218 25% 12%;
+    --accent-foreground: 220 13% 91%;
+
+    /* Destructive colors */
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Border and input */
+    --border: 218 25% 15%;
+    --input: 218 25% 15%;
+    --ring: 25 88% 63%;
+
+    /* Custom gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(28 93% 65%), hsl(28 93% 55%));
+    --gradient-hero: linear-gradient(135deg, hsl(28 93% 65%) 0%, hsl(35 91% 60%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(218 25% 8%) 0%, hsl(218 25% 10%) 100%);
+
+    /* Shadows */
+    --shadow-soft: 0 2px 20px -4px hsl(218 25% 4% / 0.6);
+    --shadow-card: 0 4px 24px -4px hsl(218 25% 4% / 0.8);
+    --shadow-primary: 0 8px 32px -8px hsl(28 93% 65% / 0.3);
+
+    /* Sidebar colors */
+    --sidebar-background: 218 25% 8%;
+    --sidebar-foreground: 220 13% 91%;
+    --sidebar-primary: 25 88% 63%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 218 25% 12%;
+    --sidebar-accent-foreground: 220 13% 91%;
+    --sidebar-border: 218 25% 15%;
+    --sidebar-ring: 25 88% 63%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-manrope;
+  }
+
+  /* Custom utility classes */
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  .shadow-primary {
+    box-shadow: var(--shadow-primary);
+  }
+
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  .gradient-card {
+    background: var(--gradient-card);
+  }
+}
