@@ -82,7 +82,7 @@ const Index = () => {
       </section>
 
       {/* Article Summarizer Section */}
-      <section className="py-16 bg-muted/30">
+      {/* <section className="py-16 bg-muted/30">
         <div className="max-w-2xl mx-auto px-6">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-foreground mb-4">Try Our AI Summarizer</h2>
@@ -90,7 +90,7 @@ const Index = () => {
           </div>
           <ArticleSummarizer />
         </div>
-      </section>
+      </section> */}
 
       {/* About Section */}
       <section id="about" className="py-20 bg-background">

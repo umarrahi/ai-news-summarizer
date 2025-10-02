@@ -66,13 +66,6 @@ const Topbar = () => {
           <Bell className="w-5 h-5" />
         </Button>
 
-        {/* Settings */}
-        <Button variant="ghost" size="icon" asChild className="rounded-full">
-          <Link to="/settings">
-            <Settings className="w-5 h-5" />
-          </Link>
-        </Button>
-
         {/* Profile dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

@@ -1,11 +1,10 @@
+// frontend\src\pages\Dashboard.tsx
 import AppLayout from "@/components/layouts/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Sparkles, Link as LinkIcon } from "lucide-react";
@@ -13,8 +12,6 @@ import { Sparkles, Link as LinkIcon } from "lucide-react";
 const Dashboard = () => {
   const [articleUrl, setArticleUrl] = useState("");
   const [articleText, setArticleText] = useState("");
-  const [isPremium, setIsPremium] = useState(false);
-  const [showKeywords, setShowKeywords] = useState(false);
 
   const handleSummarize = () => {
     // Implementation for summarizing article
@@ -73,38 +70,6 @@ const Dashboard = () => {
                 </TabsContent>
               </Tabs>
 
-              {/* Options */}
-              <div className="space-y-4 p-4 bg-muted/30 rounded-xl">
-                <h4 className="font-medium text-sm">Summarization Options</h4>
-
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <Label htmlFor="premium-mode" className="text-sm font-medium">
-                      Premium Summarizer
-                    </Label>
-                    <p className="text-xs text-muted-foreground">
-                      Advanced AI for more detailed summaries
-                    </p>
-                  </div>
-                  <Switch
-                    id="premium-mode"
-                    checked={isPremium}
-                    onCheckedChange={setIsPremium}
-                  />
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="keywords"
-                    checked={showKeywords}
-                    onCheckedChange={(checked) => setShowKeywords(checked as boolean)}
-                  />
-                  <Label htmlFor="keywords" className="text-sm">
-                    Display Keywords
-                  </Label>
-                </div>
-              </div>
-
               {/* Summarize Button */}
               <Button
                 onClick={handleSummarize}
@@ -118,7 +83,6 @@ const Dashboard = () => {
               </Button>
             </CardContent>
           </Card>
-          
           
           {/* Summarized Articles will show below */}
         </div>
