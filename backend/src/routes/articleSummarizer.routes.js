@@ -1,3 +1,4 @@
+// backend/src/routes/articleSummarizer.routes.js
 import { Router } from "express";
 import {
   createArticleSummarizer,
@@ -10,14 +11,19 @@ import { authMiddleware } from "../controllers/auth.controller.js";
 
 const router = Router();
 
-// Public: view all or one
+// List all summaries (user must be logged in)
 router.get("/", authMiddleware, getAllArticleSummarizers);
+
+// Get one summary
 router.get("/:id", authMiddleware, getArticleSummarizerById);
 
-// Protected: create, update, delete
+// Create summary (either articleUrl or articleText)
 router.post("/", authMiddleware, createArticleSummarizer);
+
+// Update existing summary
 router.put("/:id", authMiddleware, updateArticleSummarizer);
+
+// Delete summary
 router.delete("/:id", authMiddleware, deleteArticleSummarizer);
 
 export default router;
-    

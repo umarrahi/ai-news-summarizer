@@ -1,3 +1,4 @@
+// backend\src\models\articleSummarizer.model.js
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 import User from "./user.model.js";
@@ -8,21 +9,21 @@ const ArticleSummarizer = sequelize.define("ArticleSummarizer", {
     autoIncrement: true,
     primaryKey: true,
   },
-  title: {
-    type: DataTypes.STRING(150),
-    allowNull: false,
+  articleUrl: {
+    type: DataTypes.STRING,
+    allowNull: true,
   },
-  content: {
+  articleText: {
     type: DataTypes.TEXT,
-    allowNull: false,
+    allowNull: true,
   },
   summary: {
     type: DataTypes.TEXT,
-    allowNull: true, // summary may be generated later
+    allowNull: true,
   },
 });
 
-// 🔗 Relationship: One User → Many Summarized Articles
+// Relation: User → ArticleSummarizer
 User.hasMany(ArticleSummarizer, { foreignKey: "userId", onDelete: "CASCADE" });
 ArticleSummarizer.belongsTo(User, { foreignKey: "userId" });
 
