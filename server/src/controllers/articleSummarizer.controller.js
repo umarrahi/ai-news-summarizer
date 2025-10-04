@@ -103,6 +103,7 @@ const generateSummary = async (text) => {
   const result = await model.generateContent(
     `Summarize the following article in 5 sentences:\n\n${text}`
   );
+  console.log(result);
   return result.response.text();
 };
 

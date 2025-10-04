@@ -1,9 +1,10 @@
+// client\src\components\layouts\Topbar.tsx
 import { Search, Bell, Settings, User, Sun, Moon, Monitor } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,17 +13,27 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/contexts/AuthContext"; // 👈 import AuthContext
 
 const Topbar = () => {
   const { theme, setTheme } = useTheme();
+  const { logout } = useAuth(); // 👈 get logout from AuthContext
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout(); // clear token, etc.
+    navigate("/login"); // redirect to login or landing page
+  };
 
   const themeOptions = [
-    { value: 'light', label: 'Light', icon: Sun },
-    { value: 'dark', label: 'Dark', icon: Moon },
-    { value: 'system', label: 'System', icon: Monitor },
+    { value: "light", label: "Light", icon: Sun },
+    { value: "dark", label: "Dark", icon: Moon },
+    { value: "system", label: "System", icon: Monitor },
   ];
 
-  const currentThemeOption = themeOptions.find(option => option.value === theme);
+  const currentThemeOption = themeOptions.find(
+    (option) => option.value === theme
+  );
 
   return (
     <header className="h-16 bg-background border-b border-border flex items-center px-4 gap-4">
@@ -44,7 +55,9 @@ const Topbar = () => {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="icon" className="rounded-full">
-              {currentThemeOption && <currentThemeOption.icon className="w-5 h-5" />}
+              {currentThemeOption && (
+                <currentThemeOption.icon className="w-5 h-5" />
+              )}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -78,7 +91,10 @@ const Topbar = () => {
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-48 bg-popover border border-border shadow-card">
+          <DropdownMenuContent
+            align="end"
+            className="w-48 bg-popover border border-border shadow-card"
+          >
             <DropdownMenuItem asChild>
               <Link to="/profile" className="cursor-pointer">
                 <User className="w-4 h-4 mr-2" />
@@ -92,10 +108,12 @@ const Topbar = () => {
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive cursor-pointer">
-              <Link to="/" className="cursor-pointer">
-                Sign out
-              </Link>
+            <DropdownMenuItem
+              onClick={handleLogout} // 👈 call logout here
+              className="text-destructive cursor-pointer"
+            >
+              <User className="w-4 h-4 mr-2" />
+              Sign out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
