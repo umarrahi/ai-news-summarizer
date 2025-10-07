@@ -13,6 +13,7 @@ import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import { Toaster } from "react-hot-toast";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { ChatProvider } from "./contexts/ChatContext";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,9 @@ const App = () => (
       <TooltipProvider>
         <BrowserRouter>
           <AuthProvider>
+            <ChatProvider>
+
+            
             <Toaster
               position="top-center"
               reverseOrder={false}
@@ -65,6 +69,7 @@ const App = () => (
               {/* Catch-all route */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+            </ChatProvider>
           </AuthProvider>
         </BrowserRouter>
       </TooltipProvider>

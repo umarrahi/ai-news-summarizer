@@ -1,4 +1,4 @@
-// client/src/contexts/AuthContext.tsx
+// client\src\contexts\AuthContext.tsx
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { login as loginApi, register as registerApi } from "@/services/api/auth";
 import { useNavigate } from "react-router-dom";
@@ -18,14 +18,31 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<any>(null);
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // ✅ On mount — restore user from localStorage if token exists
   useEffect(() => {
-    // In a real app, fetch user info here if token exists
-    if (token) setUser({ email: "user@example.com" }); // Temporary placeholder
-  }, [token]);
+    const storedToken = localStorage.getItem("token");
 
+    if (storedToken) {
+      setToken(storedToken);
+
+      // Optionally, fetch user profile here (if backend provides endpoint)
+      // For now, use cached user info to avoid logout on reload
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      } else {
+        // Fallback user — can be improved when backend adds /auth/me
+        setUser({ email: "user@example.com" });
+      }
+    }
+
+    setLoading(false);
+  }, []);
+
+  // ✅ Login
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
@@ -33,10 +50,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (data.token) {
         localStorage.setItem("token", data.token);
         setToken(data.token);
-        setUser(data.user || { email });
+
+        const userData = data.user || { email };
+        setUser(userData);
+        localStorage.setItem("user", JSON.stringify(userData));
+
+        toast.success("Logged in successfully!");
         navigate("/dashboard");
       }
-      toast.success("Logged in successfully!");
     } catch (err: any) {
       console.error("Login failed:", err);
       toast.error(err.response?.data?.message || "Login failed");
@@ -45,6 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // ✅ Register
   const register = async (name: string, email: string, password: string) => {
     setLoading(true);
     try {
@@ -58,8 +80,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // ✅ Logout
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setToken(null);
     setUser(null);
     navigate("/login");
