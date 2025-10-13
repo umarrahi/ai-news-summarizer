@@ -5,6 +5,7 @@ import cors from "cors";
 import userRoutes from "./routes/user.routes.js";
 import articleSummarizerRoutes from "./routes/articleSummarizer.routes.js";
 import authRoutes from "./routes/auth.routes.js";
+import profileRoutes from "./routes/profile.routes.js";
 
 const app = express();
 
@@ -18,6 +19,7 @@ const API_VERSION = process.env.API_VERSION || "/api/v1";
 // Routes
 app.use(`${API_VERSION}/auth`, authRoutes);
 app.use(`${API_VERSION}/users`, userRoutes);
+app.use(`${API_VERSION}/profile`, profileRoutes);
 app.use(`${API_VERSION}/article-summarizers`, articleSummarizerRoutes);
 
 // Health Check (optional)

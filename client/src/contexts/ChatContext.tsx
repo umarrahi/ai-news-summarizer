@@ -1,3 +1,4 @@
+// client\src\contexts\ChatContext.tsx
 import { createContext, useContext, useState } from "react";
 
 const ChatContext = createContext<any>(null);

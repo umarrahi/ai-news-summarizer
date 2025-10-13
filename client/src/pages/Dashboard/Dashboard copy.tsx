@@ -1,3 +1,4 @@
+
 import ArticleSummarizer from "@/components/ArticleSummarizer";
 import AppLayout from "@/components/layouts/AppLayout";
 import { Button } from "@/components/ui/button";
@@ -47,10 +48,8 @@ const Dashboard = () => {
       <div className="p-6">
         <div className="max-w-2xl mx-auto space-y-6">
           <ArticleSummarizer />
-         
 
-
-{/* Header */}
+          {/* Header */}
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-foreground mb-2">Generated Summaries</h1>
             <p className="text-muted-foreground">View and export your AI-generated article summaries</p>
@@ -74,7 +73,7 @@ const Dashboard = () => {
                     </div>
                   </div>
                 </CardHeader>
-                
+
                 <CardContent className="space-y-4">
                   {/* Summary Text */}
                   <div className="prose prose-sm max-w-none">

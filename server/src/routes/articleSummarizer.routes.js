@@ -7,7 +7,7 @@ import {
   updateArticleSummarizer,
   deleteArticleSummarizer,
 } from "../controllers/articleSummarizer.controller.js";
-import { authMiddleware } from "../controllers/auth.controller.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const router = Router();
 

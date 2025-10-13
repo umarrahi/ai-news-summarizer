@@ -1,6 +1,6 @@
 // client\src\contexts\AuthContext.tsx
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
-import { login as loginApi, register as registerApi } from "@/services/api/auth";
+import { getMe, login as loginApi, register as registerApi } from "@/services/api/auth";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
@@ -23,23 +23,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   // ✅ On mount — restore user from localStorage if token exists
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
+    const fetchUser = async () => {
+      const storedToken = localStorage.getItem("token");
+      if (!storedToken) return setLoading(false);
 
-    if (storedToken) {
-      setToken(storedToken);
-
-      // Optionally, fetch user profile here (if backend provides endpoint)
-      // For now, use cached user info to avoid logout on reload
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
-      } else {
-        // Fallback user — can be improved when backend adds /auth/me
-        setUser({ email: "user@example.com" });
+      try {
+        const res = await getMe();
+        setUser(res.user);
+      } catch (err) {
+        console.error("Token invalid:", err);
+        localStorage.removeItem("token");
+      } finally {
+        setLoading(false);
       }
-    }
+    };
 
-    setLoading(false);
+    fetchUser();
   }, []);
 
   // ✅ Login
@@ -71,7 +70,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     try {
       await registerApi({ name, email, password });
-      await login(email, password); // Auto-login after register
+      // await login(email, password); // Auto-login after register
+      toast.success("Registered successfully! Please verfiy your email and log in.");
+      navigate("/login");
     } catch (err: any) {
       console.error("Registration failed:", err);
       toast.error(err.response?.data?.message || "Registration failed");

@@ -1,4 +1,5 @@
-import { useState } from "react";
+// client/src/pages\Dashboard/DashboardDefault.tsx
+import { useState, useEffect } from "react";
 import AppLayout from "@/components/layouts/AppLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,56 +7,23 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
-import { Sparkles, Link as LinkIcon, Loader2 } from "lucide-react";
-import { useEffect } from "react";
-import { createSummary, getAllSummaries, getSummaryById } from "@/services/api/articleSummarizer";
-import { useChat } from "@/contexts/ChatContext";
+import { Sparkles, Link as LinkIcon, Loader2, Copy } from "lucide-react";
+import { createSummary } from "@/services/api/articleSummarizer";
+import SummaryCard from "@/components/SummaryCard"; // ✅ Import your summary card component
+import { toast } from "react-hot-toast";
 
-const Dashboard = () => {
+
+const DashboardDefault = () => {
   const [articleUrl, setArticleUrl] = useState("");
   const [articleText, setArticleText] = useState("");
-  const [summaries, setSummaries] = useState<any[]>([]);
   const [currentSummary, setCurrentSummary] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
-  const { activeChatId } = useChat();
 
-  // Fetch summaries on load
-  // useEffect(() => {
-  //   fetchSummaries();
-  // }, []);
+  // ✅ Handle form submission
+  const handleSummarize = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  useEffect(() => {
-  if (!activeChatId) return;
-  if (activeChatId === "new") {
-    setCurrentSummary(null);
-    return;
-  }
-
-  fetchSummaryById(activeChatId);
-}, [activeChatId]);
-
-const fetchSummaryById = async (id: string) => {
-  try {
-    const data = await getSummaryById(id);
-    setCurrentSummary(data);
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-  // const fetchSummaries = async () => {
-  //   try {
-  //     const data = await getAllSummaries();
-  //     setSummaries(data);
-  //   } catch (err: any) {
-  //     console.error(err);
-  //     setError("Failed to load summaries.");
-  //   }
-  // };
-
-  const handleSummarize = async () => {
     if (!articleUrl && !articleText) {
       setError("Please provide either an article URL or article text.");
       return;
@@ -70,10 +38,20 @@ const fetchSummaryById = async (id: string) => {
         articleText: articleText || undefined,
       });
 
-      setSummaries((prev) => [data, ...prev]);
+      setCurrentSummary({
+        id: data.id || Date.now().toString(),
+        title: data.title || "Generated Summary",
+        originalUrl: data.articleUrl || "",
+        summary: data.summary || "No summary text provided.",
+        // keywords: data.keywords || ["AI", "Summary"],
+        dateGenerated: new Date().toLocaleDateString(),
+        wordCount: data.wordCount || 250,
+        readingTime: data.readingTime || "2 min",
+      });
+
       setArticleUrl("");
       setArticleText("");
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
       setError("Failed to summarize article. Please try again.");
     } finally {
@@ -81,11 +59,68 @@ const fetchSummaryById = async (id: string) => {
     }
   };
 
+  // ✅ Handle export actions
+  const handleExport = (summaryId: string, action: string) => {
+    const content = currentSummary?.summary || "";
+
+    switch (action) {
+      case "pdf":
+        exportToPDF(content);
+        break;
+      case "word":
+        exportToWord(content);
+        break;
+      case "print":
+        window.print();
+        break;
+      case "share":
+        navigator.share
+          ? navigator.share({ text: content })
+          : toast.error("Sharing not supported in this browser.");
+        break;
+      default:
+        toast.error("Unknown export action.");
+    }
+  };
+
+  // ✅ Export as PDF
+  const exportToPDF = (text: string) => {
+    const blob = new Blob([text], { type: "application/pdf" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "summary.pdf";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // ✅ Export as Word
+  const exportToWord = (text: string) => {
+    const blob = new Blob([text], {
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "summary.docx";
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // ✅ Copy to clipboard
+  const handleCopy = () => {
+    if (currentSummary?.summary) {
+      navigator.clipboard.writeText(currentSummary.summary);
+      toast.success("Summary copied to clipboard!");
+    }
+  };
+
   return (
-   <AppLayout>
-      <div className="p-6">
-        <div className="max-w-2xl mx-auto space-y-6">
-          {activeChatId === "new" || !currentSummary ? (
+    <div className="p-6">
+      <div className="max-w-2xl mx-auto space-y-6">
+        {!currentSummary ? (
+          // ======================= FORM CARD =======================
+          <form onSubmit={handleSummarize}>
             <Card className="w-full shadow-card">
               <CardHeader className="text-center">
                 <CardTitle className="flex items-center justify-center gap-2 text-2xl">
@@ -96,6 +131,7 @@ const fetchSummaryById = async (id: string) => {
                   Transform any article into a concise, intelligent summary
                 </p>
               </CardHeader>
+
               <CardContent className="space-y-6">
                 <Tabs defaultValue="url" className="w-full">
                   <TabsList className="grid w-full grid-cols-2">
@@ -137,7 +173,7 @@ const fetchSummaryById = async (id: string) => {
                 {error && <p className="text-red-500 text-sm">{error}</p>}
 
                 <Button
-                  onClick={handleSummarize}
+                  type="submit"
                   size="xl"
                   shape="pill"
                   variant="hero"
@@ -158,35 +194,39 @@ const fetchSummaryById = async (id: string) => {
                 </Button>
               </CardContent>
             </Card>
-          ) : (
-            <Card className="shadow-sm border border-gray-200">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold">
-                  {currentSummary.articleUrl ? (
-                    <a
-                      href={currentSummary.articleUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline"
-                    >
-                      {currentSummary.articleUrl}
-                    </a>
-                  ) : (
-                    "Manual Article"
-                  )}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-700 whitespace-pre-line">
-                  {currentSummary.summary}
-                </p>
-              </CardContent>
-            </Card>
-          )}
-        </div>
+          </form>
+        ) : (
+          // ======================= SUMMARY CARD =======================
+          <div className="space-y-4">
+            <SummaryCard
+              id={currentSummary.id}
+              title={currentSummary.title}
+              originalUrl={currentSummary.originalUrl}
+              summary={currentSummary.summary}
+              // keywords={currentSummary.keywords}
+              dateGenerated={currentSummary.dateGenerated}
+              wordCount={currentSummary.wordCount}
+              readingTime={currentSummary.readingTime}
+              onExport={handleExport}
+            />
+
+            <div className="flex justify-end gap-2">
+              <Button variant="secondary" onClick={handleCopy}>
+                <Copy className="w-4 h-4 mr-2" />
+                Copy Text
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => setCurrentSummary(null)}
+              >
+                New Summary
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
-    </AppLayout>
+    </div>
   );
 };
 
-export default Dashboard;
+export default DashboardDefault;

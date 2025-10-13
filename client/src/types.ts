@@ -37,3 +37,22 @@ export interface ThemeContextType {
   setTheme: (theme: Theme) => void;
   actualTheme: 'light' | 'dark';
 }
+
+export interface Summary {
+  id: string; // Keep as string (from backend)
+  title: string;
+  summary: string;
+  originalUrl: string;
+  keywords: string[];
+  dateGenerated: string;
+  wordCount: number;
+  readingTime: string;
+  createdAt: string;
+}
+
+export interface SummaryItem {
+  id: string;
+  title: string;
+  summary: string;
+  createdAt: string;
+}
