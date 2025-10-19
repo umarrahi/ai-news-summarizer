@@ -1,6 +1,6 @@
 // server/src/controllers/profile.controller.js
 import User from "../models/user.model.js";
-
+import bcrypt from "bcryptjs";
 
 // ✅ Get Logged-in User Profile
 export const getProfile = async (req, res) => {
@@ -70,6 +70,7 @@ export const changePassword = async (req, res) => {
 
     res.status(200).json({ message: "Password updated successfully" });
   } catch (err) {
+    console.log(err)
     res.status(500).json({ error: err.message });
   }
 };

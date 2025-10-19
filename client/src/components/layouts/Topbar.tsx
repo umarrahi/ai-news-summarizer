@@ -75,9 +75,9 @@ const Topbar = () => {
         </DropdownMenu>
 
         {/* Notifications */}
-        <Button variant="ghost" size="icon" className="rounded-full">
+        {/* <Button variant="ghost" size="icon" className="rounded-full">
           <Bell className="w-5 h-5" />
-        </Button>
+        </Button> */}
 
         {/* Profile dropdown */}
         <DropdownMenu>
@@ -101,12 +101,12 @@ const Topbar = () => {
                 Profile
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
+            {/* <DropdownMenuItem asChild>
               <Link to="/settings" className="cursor-pointer">
                 <Settings className="w-4 h-4 mr-2" />
                 Settings
               </Link>
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={handleLogout} // 👈 call logout here
