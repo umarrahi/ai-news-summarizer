@@ -1,8 +1,9 @@
 // server/src/controllers/auth.controller.js
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import transporter, { sendStyledEmail } from "../config/nodemailer.js";
+// import { sendPasswordResetEmail, sendVerifyEmail } from "../config/mailer.js";
 import User from "../models/user.model.js";
+import { sendPasswordResetEmail, sendVerifyEmail } from "../utils/email.util.js";
 
 // ✅ Register User
 export const register = async (req, res) => {
@@ -34,7 +35,7 @@ export const register = async (req, res) => {
     // Send verification email
     const verifyLink = `${process.env.CLIENT_URL}/verify-email/${verificationToken}`;
 
-    await sendStyledEmail(
+    await sendVerifyEmail(
       email,
       "Verify your email",
       `Welcome, ${name}!`,
@@ -136,31 +137,34 @@ export const getMe = async (req, res) => {
 export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
+
+    // 1️⃣ Check if user exists
     const user = await User.findOne({ where: { email } });
+    if (!user)
+      return res.status(404).json({ message: "No account found with this email" });
 
-    if (!user) return res.status(404).json({ message: "No account found with this email" });
+    // 2️⃣ Generate reset token (15 mins expiry)
+    const resetToken = jwt.sign({ email }, process.env.JWT_SECRET, {
+      expiresIn: "15m",
+    });
 
-    const resetToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "15m" });
-
+    // 3️⃣ Save token in DB (optional if using only token validation)
     user.resetToken = resetToken;
     await user.save();
 
+    // 4️⃣ Create reset link
     const resetLink = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
 
-    await transporter.sendMail({
-      from: '"AI Summarizer" <no-reply@aisummarizer.com>',
-      to: email,
-      subject: "Reset your password",
-      html: `
-        <h3>Password Reset Request</h3>
-        <p>Click below to reset your password. This link expires in 15 minutes.</p>
-        <a href="${resetLink}" target="_blank">Reset Password</a>
-      `,
-    });
+    // 5️⃣ Send styled email
+    await sendPasswordResetEmail(email, resetLink);
 
-    res.status(200).json({ message: "Password reset link sent to your email." });
+    // 6️⃣ Respond success
+    res
+      .status(200)
+      .json({ message: "Password reset link sent to your email." });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("❌ Forgot Password Error:", err);
+    res.status(500).json({ error: "Something went wrong. Please try again later." });
   }
 };
 

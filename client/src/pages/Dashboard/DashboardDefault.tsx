@@ -271,6 +271,7 @@ const DashboardDefault = () => {
         articleUrl: articleUrl || undefined,
         articleText: articleText || undefined,
       });
+      console.log("Generated summary >>> ", data)
 
       setCurrentSummary({
         id: data.id || Date.now().toString(),
@@ -278,7 +279,8 @@ const DashboardDefault = () => {
         originalUrl: data.articleUrl || "",
         summary: data.summary || "No summary text provided.",
         // keywords: data.keywords || ["AI", "Summary"],
-        dateGenerated: new Date().toLocaleDateString(),
+        // dateGenerated: new Date().toLocaleDateString(),
+        dateGenerated: data.createdAt,
         wordCount: data.wordCount || 250,
         readingTime: data.readingTime || "2 min",
       });
@@ -312,7 +314,7 @@ const DashboardDefault = () => {
 
   return (
     <div className="p-6">
-      <div className="max-w-2xl mx-auto space-y-6">
+      <div className="max-w-3xl mx-auto space-y-6">
         {!currentSummary ? (
           // ======================= FORM CARD =======================
           <form onSubmit={handleSummarize}>

@@ -15,13 +15,13 @@ const DashboardChatView = () => {
 
   useEffect(() => {
     const fetchSummary = async () => {
-      
+
       if (!activeChatId) {
         setLoading(false);
         return;
       }
       // e.preventDefault();
-      
+
       setLoading(true);
       setError(null);
       try {
@@ -69,22 +69,24 @@ const DashboardChatView = () => {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">{summary.title || "Untitled Summary"}</h1>
-      <SummaryCard
-        id={summary.id}
-        title={summary.title}
-        originalUrl={summary.originalUrl || ""}
-        summary={summary.summary}
-        // keywords={summary.keywords || []} // ✅ Critical: prevent undefined.map()
-        dateGenerated={summary.dateGenerated || new Date(summary.createdAt).toLocaleDateString()}
-        wordCount={summary.wordCount || 0}
-        readingTime={summary.readingTime || "1 min read"}
-        onExport={(id, action) => {
-          console.log(`Exporting summary ${id} as ${action}`);
-          // TODO: Implement shared export logic if needed
-        }}
-      />
+    <div className="p-6">
+      <div className="max-w-3xl mx-auto space-y-6">
+        <h1 className="text-xl font-bold">{summary.title || "Untitled Summary"}</h1>
+        <SummaryCard
+          id={summary.id}
+          title={summary.title}
+          originalUrl={summary.originalUrl || ""}
+          summary={summary.summary}
+          // keywords={summary.keywords || []} // ✅ Critical: prevent undefined.map()
+          dateGenerated={summary.dateGenerated || new Date(summary.createdAt).toLocaleDateString()}
+          wordCount={summary.wordCount || 0}
+          readingTime={summary.readingTime || "1 min read"}
+          onExport={(id, action) => {
+            console.log(`Exporting summary ${id} as ${action}`);
+            // TODO: Implement shared export logic if needed
+          }}
+        />
+      </div>
     </div>
   );
 };
