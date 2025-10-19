@@ -15,11 +15,13 @@ const DashboardChatView = () => {
 
   useEffect(() => {
     const fetchSummary = async () => {
+      
       if (!activeChatId) {
         setLoading(false);
         return;
       }
-
+      // e.preventDefault();
+      
       setLoading(true);
       setError(null);
       try {

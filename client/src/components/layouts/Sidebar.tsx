@@ -129,7 +129,10 @@ const AppSidebar = () => {
             <Button
               className="w-full mb-3"
               variant="default"
-              onClick={() => setActiveChatId(null)} // ✅ resets dashboard to new mode
+             onClick={() => {
+                 setActiveChatId(null); // ✅ Reset activeChatId
+                 navigate("/dashboard"); // Navigate to default dashboard view
+              }}
             >
               <Plus className="w-4 h-4 mr-2" />
               New Summary
