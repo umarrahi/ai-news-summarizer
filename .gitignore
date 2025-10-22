@@ -20,9 +20,9 @@ frontend/dist/
 *.local
 
 # Environment files
-.env
-backend/.env
-frontend/.env
+# .env
+# backend/.env
+# frontend/.env
 
 # Editor & system files
 .vscode/*
